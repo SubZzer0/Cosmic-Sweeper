@@ -1,0 +1,148 @@
+
+import pygame
+
+class Menu():
+    def __init__(self, game):
+        self.game = game
+        self.mid_w, self.mid_h = self.game.display_w/2, self.game.display_h/2
+        self.run_display = True
+
+    def blit_screen(self):
+        self.game.window.blit(self.game.display, (0, 0))
+        pygame.display.update()
+
+class MainMenu(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.play_x, self.play_y = self.mid_w, self.mid_h-500*self.game.scale_y
+        self.difficulty_x, self.difficulty_y = self.mid_w, self.mid_h-200*self.game.scale_y
+        self.settings_x, self.settings_y = self.mid_w, self.mid_h+50*self.game.scale_y
+        self.credits_x, self.credits_y = self.mid_w, self.mid_h+300*self.game.scale_y
+        self.exit_x, self.exit_y = self.mid_w, self.mid_h+550*self.game.scale_y
+
+    def display_menu(self):
+        self.run_display = True
+        while self.run_display:
+            self.game.check_events()
+            self.game.display.blit(self.game.background, (0, 0))
+            self.game.draw_button(self.game.play_button, self.play_x, self.play_y)
+            self.play_rect = self.game.button_rect.inflate(-30,-30)
+            self.game.draw_button(self.game.difficulty_button, self.difficulty_x, self.difficulty_y)
+            self.difficulty_rect = self.game.button_rect.inflate(-30,-30)
+            self.game.draw_button(self.game.settings_button, self.settings_x, self.settings_y)
+            self.settings_rect = self.game.button_rect.inflate(-30,-30)
+            self.game.draw_button(self.game.credits_button, self.credits_x, self.credits_y)
+            self.credits_rect = self.game.button_rect.inflate(-30,-30)
+            self.game.draw_button(self.game.exit_button, self.exit_x, self.exit_y)
+            self.exit_rect = self.game.button_rect.inflate(-30,-30)
+            self.check_input()
+            self.blit_screen()
+
+    def check_input(self):
+        pos = pygame.mouse.get_pos()
+        if self.play_rect.collidepoint(pos):
+            self.game.draw_button(self.game.play_hover, self.play_x, self.play_y)
+            click = pygame.mouse.get_pressed()
+            if click[0]:
+                self.game.draw_button(self.game.play_pressed, self.play_x, self.play_y)
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        self.run_display = False
+                        self.game.playing = True
+                        self.game.reset_game()
+
+        elif self.difficulty_rect.collidepoint(pos):
+            self.game.draw_button(self.game.difficulty_hover, self.difficulty_x, self.difficulty_y)
+            self.click = pygame.mouse.get_pressed()
+            if self.click[0]:
+                self.game.draw_button(self.game.difficulty_pressed, self.difficulty_x, self.difficulty_y)
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        self.game.curr_menu = self.game.difficulty_menu
+                        self.run_display = False
+
+        elif self.settings_rect.collidepoint(pos):
+            self.game.draw_button(self.game.settings_hover, self.settings_x, self.settings_y)
+            self.click = pygame.mouse.get_pressed()
+            if self.click[0]:
+                self.game.draw_button(self.game.settings_pressed, self.settings_x, self.settings_y)
+
+        elif self.credits_rect.collidepoint(pos):
+            self.game.draw_button(self.game.credits_hover, self.credits_x, self.credits_y)
+            self.click = pygame.mouse.get_pressed()
+            if self.click[0]:
+                self.game.draw_button(self.game.credits_pressed, self.credits_x, self.credits_y)
+
+        elif self.exit_rect.collidepoint(pos):
+            self.game.draw_button(self.game.exit_hover, self.exit_x, self.exit_y)
+            self.click = pygame.mouse.get_pressed()
+            if self.click[0]:
+                self.game.draw_button(self.game.exit_pressed, self.exit_x, self.exit_y)
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        self.game.running, self.game.playing = False, False
+                        self.run_display = False
+
+class DifficultyMenu(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.beginner_x, self.beginner_y = self.game.display_w/4.45, self.mid_h-500*self.game.scale_y
+        self.intermediate_x, self.intermediate_y = self.game.display_w/4.45, self.mid_h-300*self.game.scale_y
+        self.expert_x, self.expert_y = self.game.display_w/4.45, self.mid_h-100*self.game.scale_y
+        self.custom_x, self.custom_y = self.game.display_w/4.45, self.mid_h+100*self.game.scale_y
+        self.back_x, self.back_y = self.game.display_w/4.45, self.mid_h+300*self.game.scale_y
+
+        
+    def display_menu(self):
+        self.run_display = True
+        while self.run_display:
+            self.game.check_events()
+            self.game.display.blit(self.game.background, (0, 0))
+            self.game.draw_button(self.game.play_button, self.beginner_x, self.beginner_y)
+            self.beginner_rect = self.game.button_rect.inflate(-30,-30)
+            self.game.draw_button(self.game.intermediate_button, self.intermediate_x, self.intermediate_y)
+            self.intermediate_rect = self.game.button_rect.inflate(-30,-30)
+            self.game.draw_button(self.game.expert_button, self.expert_x, self.expert_y)
+            self.expert_rect = self.game.button_rect.inflate(-30,-30)
+            self.game.draw_button(self.game.custom_button, self.custom_x, self.custom_y)
+            self.custom_rect = self.game.button_rect.inflate(-30,-30)
+            self.game.draw_button(self.game.back_button, self.back_x, self.back_y)
+            self.back_rect = self.game.button_rect.inflate(-30,-30)
+            self.check_input()
+            self.blit_screen()
+
+    def check_input(self):
+        pos = pygame.mouse.get_pos()
+        if self.beginner_rect.collidepoint(pos):
+            self.game.draw_button(self.game.beginner_hover, self.beginner_x, self.beginner_y)
+            click = pygame.mouse.get_pressed()
+            if click[0]:
+                self.game.draw_button(self.game.beginner_pressed, self.beginner_x, self.beginner_y)
+
+        elif self.intermediate_rect.collidepoint(pos):
+            self.game.draw_button(self.game.intermediate_hover, self.intermediate_x, self.intermediate_y)
+            self.click = pygame.mouse.get_pressed()
+            if self.click[0]:
+                self.game.draw_button(self.game.intermediate_pressed, self.intermediate_x, self.intermediate_y)
+
+        elif self.expert_rect.collidepoint(pos):
+            self.game.draw_button(self.game.expert_hover, self.expert_x, self.expert_y)
+            self.click = pygame.mouse.get_pressed()
+            if self.click[0]:
+                self.game.draw_button(self.game.expert_pressed, self.expert_x, self.expert_y)
+
+        elif self.custom_rect.collidepoint(pos):
+            self.game.draw_button(self.game.custom_hover, self.custom_x, self.custom_y)
+            self.click = pygame.mouse.get_pressed()
+            if self.click[0]:
+                self.game.draw_button(self.game.custom_pressed, self.custom_x, self.custom_y)
+
+        elif self.custom_rect.collidepoint(pos):
+            self.game.draw_button(self.game.back_hover, self.back_x, self.back_y)
+            self.click = pygame.mouse.get_pressed()
+            if self.click[0]:
+                self.game.draw_button(self.game.back_pressed, self.back_x, self.back_y)
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        self.game.curr_menu = self.game.main_menu
+                        self.run_display = False
